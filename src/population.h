@@ -5,17 +5,22 @@
 #include <math.h>
 #include "tools.h"
 
+#define MAX_FAM_NUMBER 20
 #define INIT_FAM_SIZE 10
 #define INIT_FAM_NUMBER 100
 #define INIT_POP INIT_FAM_NUMBER*INIT_FAM_SIZE
+#define MAX_POP 2*INIT_POP
 #define VAR_COEF 10
+#define RESOURCES INIT_POP
 // Force 10 species in full random mode
 #define NSPEC 10
-#define RAND() (((float) rand())/RAND_MAX)
-
 #define BIRTH_CONSTANT 1
 #define DEATH_CONSTANT 2
 #define AGING 0
+
+#define RAND() (((float) rand())/RAND_MAX)
+
+
 
 typedef struct {
     int species;
@@ -34,15 +39,17 @@ typedef struct {
 } individual;
 
 typedef struct {
-    int dead[INIT_POP];
-    int alive[INIT_POP];
-    individual indiv[INIT_POP];
-    family_t fam[INIT_FAM_NUMBER];
+    int dtop;
+    int dead[MAX_POP];
+    int atop;
+    int alive[MAX_POP];
+    individual indiv[MAX_POP];
+    family_t fam[MAX_FAM_NUMBER];
 } population;
 
 void init_families_full_random(population* pop);
 void init_families_from_species(population* pop, int nspec, family_t* spec,
-                                int fam_spec_map[INIT_FAM_NUMBER]);
+                                int fam_spec_map[MAX_FAM_NUMBER]);
 
 void init_pop(population* pop);
 

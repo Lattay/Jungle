@@ -6,57 +6,72 @@ void init_pop(population* pop){
     for(int i = 0; i < INIT_FAM_NUMBER; i++){
 
         for(int j = 0; j < INIT_FAM_SIZE; j++){
-            pop->dead[k] = -1; // no dead at the begining
-            pop->alive[k] = k; // all alive at the begining
             k = INIT_FAM_SIZE * i + j;
+            pop->dead[k + INIT_POP] = -1;
+            pop->alive[k] = k;
             pop->indiv[k].direction = RAND();
             pop->indiv[k].speed = RAND();
             pop->indiv[k].vitality = pop->fam[i].vitality * (0.5 + RAND() / 2);
             pop->indiv[k].family = i;
         }
     }
+    for(int i = INIT_POP; i < MAX_POP; i++){
+        pop->alive[i] = -1;
+        pop->dead[i-INIT_POP] = i;
+    }
 }
 
 
-static void sort_index_array(int* arr, int size){
+static void sort_dead_stack(population* pop){
     int first_free = 0;
-    int last_occupied = size;
-    while(first_free < last_occupied){
-        while(arr[first_free] >= 0) first_free++;
-        while(arr[last_occupied] < 0) last_occupied--;
-        arr[first_free] = arr[last_occupied];
-        arr[last_occupied] = -1;
+    int last_occupied = MAX_POP;
+    while(first_free <= last_occupied){
+        while(pop->dead[first_free] >= 0) first_free++;
+        while(pop->dead[last_occupied] < 0) last_occupied--;
+        pop->dead[first_free] = pop->dead[last_occupied];
+        pop->dead[last_occupied] = -1;
     }
+    pop->dtop = first_free;
+}
+
+static void sort_alive_stack(population* pop){
+    int first_free = 0;
+    int last_occupied = MAX_POP;
+    while(first_free <= last_occupied){
+        while(pop->alive[first_free] >= 0) first_free++;
+        while(pop->alive[last_occupied] < 0) last_occupied--;
+        pop->alive[first_free] = pop->alive[last_occupied];
+        pop->alive[last_occupied] = -1;
+    }
+    pop->atop = first_free;
 }
 
 void life_cycle(population* pop){
     // remove random individual => Natural death
     int k, h;
-    for(int i = 0; i < INIT_POP; i++){
-        if(pop->alive[i] != -1){
-            k = pop->alive[i];
+    sort_dead_stack(pop);
+    while(pop->alive[h] > 0){
+        k = pop->alive[h];
 
-            // If AGING individual loose vitality at each generation
-            // If vitality reach 0 they die
-            if(AGING){
-                pop->indiv[k].vitality -= 0.5*RAND();
-            }
-            if(pop->indiv[k].vitality < RAND()*DEATH_CONSTANT){
-                // Death
-                pop->alive[i] = -1;
-                h = INIT_POP;
-                while(pop->dead[h] >= 0) h--;
-                pop->dead[h] = k;
-            }
+        // If AGING > 0 individual loose vitality at each generation
+        // If vitality reach 0 they die
+        if(AGING){
+            pop->indiv[k].vitality -= AGING*RAND();
+        }
+        if(pop->indiv[k].vitality < RAND()*DEATH_CONSTANT){
+            // Death
+            pop->alive[h] = -1;
+            h = INIT_POP;
+            pop->dead[pop->dtop++] = k;
         }
     }
-    sort_index_array(pop->dead, INIT_POP);
-    // create new individual based on:
-    // - family ressources
-    // - global ressources
-    // - available space in the population array
-    // - family population
-    // (global_ressources/total_pop + fam_ressources/family_pop) 
-    //   * family_pop * fertility * CONSTANT
-    sort_index_array(pop->alive, INIT_POP);
+    sort_alive_stack(pop);
+    // Select two families
+    // create a new one with crossed features
+    // use Verhulst like model to conpute the number of individual of the
+    // new family
+    // FR * Pf * (1 - P*Pf/(RS * Pf + RSf * P))
+    // 
+    // Adding a mecanism to prevent buffer overflow but tracking
+    // the tendency to over populate
 }
