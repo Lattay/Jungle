@@ -24,11 +24,14 @@
 
 typedef struct {
     int species;
+    // features
     float aggresiveness;
     float fertility;
     float sociability;
     float vitality;
+    //
     int ressources;
+    int population;
 } family_t;
 
 typedef struct {
