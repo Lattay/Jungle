@@ -3,17 +3,20 @@
 void init_pop(population* pop){
 
     int i;
-    for(int k = 0; k < INIT_FAM_NUMBER; k++){
-
+    for(int f = 0; f < INIT_FAM_NUMBER; f++){
         for(int h = 0; h < INIT_FAM_SIZE; h++){
-            k = INIT_FAM_SIZE * k + h;
+            i = INIT_FAM_SIZE * f + h;
             pop->dead[i + INIT_POP] = -1;
             pop->alive[i] = i;
             pop->indiv[i].direction = RAND();
             pop->indiv[i].speed = RAND();
-            pop->indiv[i].vitality = pop->fam[k].vitality * (0.5 + RAND() / 2);
-            pop->indiv[i].family = i;
+            pop->indiv[i].vitality = pop->fam[f].vitality * (0.5 + RAND() / 2);
+            pop->indiv[i].family = f;
         }
+        pop->fam[f].population = INIT_FAM_SIZE;
+    }
+    for(int f = INIT_FAM_NUMBER; f < MAX_FAM_NUMBER; f++){
+        pop->fam[f].population = 0;
     }
     for(int k = INIT_POP; k < MAX_POP; k++){
         pop->alive[k] = -1;
