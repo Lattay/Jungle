@@ -5,11 +5,11 @@
 #include <math.h>
 #include "tools.h"
 
-#define MAX_FAM_NUMBER 20
-#define INIT_FAM_SIZE 10
+#define MAX_FAM_NUMBER 200
 #define INIT_FAM_NUMBER 100
+#define INIT_FAM_SIZE 10
 #define INIT_POP INIT_FAM_NUMBER*INIT_FAM_SIZE
-#define MAX_POP 2*INIT_POP
+#define MAX_POP MAX_FAM_NUMBER*INIT_FAM_SIZE
 #define VAR_COEF 10
 #define RESOURCES INIT_POP
 // Force 10 species in full random mode
