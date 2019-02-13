@@ -6,11 +6,10 @@ void init_pop(population* pop){
     for(int f = 0; f < INIT_FAM_NUMBER; f++){
         for(int h = 0; h < INIT_FAM_SIZE; h++){
             i = INIT_FAM_SIZE * f + h;
-            pop->dead[i + INIT_POP] = -1;
-            pop->alive[i] = i;
             pop->indiv[i].direction = RAND();
             pop->indiv[i].speed = RAND();
             pop->indiv[i].vitality = pop->fam[f].vitality * (0.5 + RAND() / 2);
+
             pop->indiv[i].family = f;
         }
         pop->fam[f].population = INIT_FAM_SIZE;
@@ -18,13 +17,22 @@ void init_pop(population* pop){
     for(int f = INIT_FAM_NUMBER; f < MAX_FAM_NUMBER; f++){
         pop->fam[f].population = 0;
     }
-    for(int k = INIT_POP; k < MAX_POP; k++){
-        pop->alive[k] = -1;
-        pop->dead[k-INIT_POP] = k;
+    // Fill stacks
+    for(int k = 0; k < MAX_POP; k++){
+        if(k < INIT_POP){
+            pop->alive[k] = k;
+        } else {
+            pop->alive[k] = -1;
+        }
+        if(MAX_POP - k < MAX_POP - INIT_POP){
+            pop->dead[k] = -1;
+        } else {
+            pop->dead[k] = MAX_POP - k;
+        }
     }
 }
 
-/* Stack will be kept tidy
+/* The dead stack is kept tidy
 static void sort_dead_stack(population* pop){
     int first_free = 0;
     int last_occupied = MAX_POP;
