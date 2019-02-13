@@ -92,18 +92,30 @@ int birth_top(population* pop){
 
 void life_cycle(population* pop){
     // remove random individual => Natural death
-    int a, i;
+    int a = 0, i;
+    int tot = pop->atop; // indirectly atop is the population counter
+    float fvit, ivit;
+    int fam_pop_before[MAX_FAM_NUMBER] = {0};
+    int fam_pop_after[MAX_FAM_NUMBER] = {0};
+
     while(pop->alive[a] > 0){
         i = pop->alive[a];
+        fam_pop_before[pop->indiv[i].family] += 1;
 
+        fvit = pop->fam[pop->indiv[i].family].vitality;
         // If AGING > 0 individual loose vitality at each generation
         // If vitality reach 0 they die
         if(AGING){
             pop->indiv[i].vitality -= AGING*RAND();
         }
-        if(pop->indiv[i].vitality < RAND()*DEATH_CONSTANT){
+        ivit = pop->indiv[i].vitality;
+        if(ivit == 0.0 || ivit < fvit * RAND() * MAX_POP / (MAX_POP - tot)){
+            // MAX_POP/(MAX_POP - tot) is the over population term
             kill_alive(pop, a);
+        } else {
+          fam_pop_after[pop->indiv[i].family] += 1;
         }
+        a++;
     }
     // Select two families
     // create a new one with crossed features
