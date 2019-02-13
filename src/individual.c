@@ -44,8 +44,10 @@ static void sort_dead_stack(population* pop){
     }
     pop->dtop = first_free;
 }
+*/
 
-static void sort_alive_stack(population* pop){
+// Tidy up the stack
+static void tidy_alive_stack(population* pop){
     int first_free = 0;
     int last_occupied = MAX_POP;
     while(first_free <= last_occupied){
@@ -56,7 +58,6 @@ static void sort_alive_stack(population* pop){
     }
     pop->atop = first_free;
 }
-*/
 
 // Kill given the position in the indiv array
 // Used to kill in fight
@@ -69,9 +70,10 @@ void kill_indiv(population* pop, int i){
 }
 // Kill given the position in the stack (faster)
 // Used to kill at the end of the generation
+// /!\ Does not tidy up pop->alive
 int kill_alive(population* pop, int a){
     int i = pop->alive[a];
-    pop->alive[a] = pop->alive[pop->atop--];
+    pop->alive[a] = -1;
     pop->fam[pop->indiv[i].family].population--;
     pop->dead[++pop->dtop] = i;
     return i;
@@ -117,12 +119,12 @@ int birth_top(population* pop){
 
 void life_cycle(population* pop){
     // remove random individual => Natural death
-    int a = 0, i;
     int tot = pop->atop; // indirectly atop is the population counter
-    float fvit, ivit;
 
-    while(pop->alive[a] > 0){
-        i = pop->alive[a];
+    int a = 0;
+    while(a <= pop->atop){
+        float fvit, ivit;
+        int i = pop->alive[a];
 
         fvit = pop->fam[pop->indiv[i].family].vitality;
         // If AGING > 0 individual loose vitality at each generation
@@ -137,8 +139,12 @@ void life_cycle(population* pop){
         }
         a++;
     }
+    tidy_alive_stack(pop);
+
     for(int f = 0; f < MAX_FAM_NUMBER; f++){
-        
+        if(pop->fam[f].population > 0){
+            
+        }
     }
     // Select two families
     // create a new one with crossed features
