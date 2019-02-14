@@ -3,6 +3,11 @@ This is a life simulator based on basic rules but not too basic.
 This project is for experimentation purpose and I am very curious of
 what will appear at the end.
 
+# Current state of the project
+
+The project is still in its very early stage where I did not implemented all the basics
+features and I am still designing some mechanisms. That is why there is noot even a Makefile.
+
 # Principles
 
 This program simulate the evolution of a population of individuals interacting
@@ -34,7 +39,9 @@ When assaulting an individual win a bit of ressources for its family.
 
 After a fixed amount of time a life cycle occur.
 Individual have a probability to die depending on their vitality.
-Each family produce new borns proportionaly to the available ressources and the family population.
+Randomly selected families are crossed with randomly selected other family of the same species
+to create a new family of newborns. The population of the new family is determined thanks
+to a Verhulst like model.
 New borns features are obtained by crossing two families of the same species which create a new distinct family.
 
 The field provide a constant amount of ressources which means that if the population grow too fast
