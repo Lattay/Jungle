@@ -5,7 +5,7 @@ void init_families_full_random(population* pop){
     if(NSPEC){
         nspec = NSPEC;
     } else {
-        nspec = (int) map1(RAND(), 0.5, 1.0) * INIT_FAM_NUMBER / VAR_COEF;
+        nspec = (int) map1(RAND(), 0.5, 1.0) * MAX_SPEC;
     }
     float ag, fr, sc, vi, norm;
     for(int f = 0; f < INIT_FAM_NUMBER; f++){
