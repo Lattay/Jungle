@@ -35,6 +35,15 @@ void init_pop(population* pop){
     }
 }
 
+void init_newborn(population* pop, int i, int f){
+    pop->indiv[i].direction = RAND();
+    pop->indiv[i].speed = RAND();
+    pop->indiv[i].vitality = pop->fam[f].vitality * map1(RAND(), 0.5, 1.0);
+    pop->indiv[i].x = RAND();
+    pop->indiv[i].y = RAND();
+    pop->indiv[i].family = f;
+}
+
 /* The dead stack is kept tidy
 static void sort_dead_stack(population* pop){
     int first_free = 0;
@@ -50,7 +59,7 @@ static void sort_dead_stack(population* pop){
 */
 
 // Tidy up the stack
-static void tidy_alive_stack(population* pop){
+void tidy_alive_stack(population* pop){
     int first_free = 0;
     int last_occupied = MAX_POP;
     while(first_free <= last_occupied){
@@ -119,42 +128,3 @@ int birth_top(population* pop){
     return -1;
 }
 
-
-void life_cycle(population* pop){
-    // remove random individual => Natural death
-    int tot = pop->atop; // indirectly atop is the population counter
-
-    int a = 0;
-    while(a <= pop->atop){
-        float fvit, ivit;
-        int i = pop->alive[a];
-
-        fvit = pop->fam[pop->indiv[i].family].vitality;
-        // If AGING > 0 individual loose vitality at each generation
-        // If vitality reach 0 they die
-        if(AGING){
-            pop->indiv[i].vitality -= AGING*RAND();
-        }
-        ivit = pop->indiv[i].vitality;
-        if(ivit == 0.0 || ivit < fvit * RAND() * MAX_POP / (MAX_POP - tot)){
-            // MAX_POP/(MAX_POP - tot) is the over population term
-            kill_alive(pop, a);
-        }
-        a++;
-    }
-    tidy_alive_stack(pop);
-
-    for(int f = 0; f < MAX_FAM_NUMBER; f++){
-        if(pop->fam[f].population > 0){
-            
-        }
-    }
-    // Select two families
-    // create a new one with crossed features
-    // use Verhulst like model to conpute the number of individual of the
-    // new family
-    // FR * Pf * (1 - P*Pf/(RS * Pf + RSf * P))
-    // 
-    // Adding a mecanism to prevent buffer overflow but tracking
-    // the tendency to over populate
-}
