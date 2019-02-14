@@ -8,7 +8,10 @@ void init_pop(population* pop){
             i = INIT_FAM_SIZE * f + h;
             pop->indiv[i].direction = RAND();
             pop->indiv[i].speed = RAND();
-            pop->indiv[i].vitality = pop->fam[f].vitality * (0.5 + RAND() / 2);
+            pop->indiv[i].x = RAND();
+            pop->indiv[i].y = RAND();
+            pop->indiv[i].vitality = pop->fam[f].vitality 
+                                     * map1(RAND(), 0.5, 1.0);
 
             pop->indiv[i].family = f;
         }

@@ -42,6 +42,8 @@ typedef struct {
 typedef struct {
     float direction;
     float speed;
+    float x;
+    float y;
     float vitality;
     int family;
 } individual;
