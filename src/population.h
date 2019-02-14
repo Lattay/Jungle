@@ -55,10 +55,18 @@ typedef struct {
     family_t fam[MAX_FAM_NUMBER];
 } population;
 
+// family.c
 void init_families_full_random(population* pop);
 void init_families_from_species(population* pop, int nspec, family_t* spec,
                                 int fam_spec_map[MAX_FAM_NUMBER]);
+void cross_families(population* pop, int f1, int f2, int newf);
 
+// individual.c
 void init_pop(population* pop);
+void tidy_alive_stack(population* pop);
+void kill_indiv(population* pop, int i);
+int kill_alive(population* pop, int a);
+int birth_top(population* pop);
+
 
 #endif

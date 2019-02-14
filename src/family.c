@@ -40,3 +40,20 @@ void init_families_from_species(population* pop, int nspec, family_t* spec,
         pop->fam[f].ressources = 0;
     }
 }
+
+void cross_families(population* pop, int f1, int f2, int newf){
+    
+    float ag, fr, sc, vi, norm;
+    ag = RAND(); fr = RAND(); sc = RAND(); vi = RAND();
+    norm = sqrt(ag*ag + fr*fr + sc*sc + vi*vi);
+
+    pop->fam[newf].species = pop->fam[f1].species;
+    pop->fam[newf].aggresiveness = ag / norm;
+    pop->fam[newf].fertility = fr / norm;
+    pop->fam[newf].sociability = sc / norm;
+    pop->fam[newf].vitality = vi / norm;
+    pop->fam[newf].ressources = 0;
+    pop->fam[newf].population = 0;
+}
+
+
