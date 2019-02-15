@@ -1,4 +1,7 @@
+#include "tools.h"
 #include "population.h"
+#include "field.h"
+#include "simulation.h"
 
 void life_cycle(population* pop){
     // remove random individual => Natural death
@@ -30,11 +33,11 @@ void life_cycle(population* pop){
     // one stack correspond to one species
     // MAX_FAM_NUMBER*s store the high of the s'th stack
     // MAX_FAM_NUMBER*s + 1... are the elements of the stack
-    int spec_fam[MAX_SPEC*(MAX_FAM_NUMBER + 1)];
+    short spec_fam[MAX_SPEC*(MAX_FAM_NUMBER + 1)];
     for(int k = 0; k < MAX_SPEC; k++){
         spec_fam[MAX_FAM_NUMBER*k] = 0;
     }
-    int dead_fam[MAX_FAM_NUMBER];
+    short dead_fam[MAX_FAM_NUMBER];
     int dead_fam_p = 0;
     for(int f = 0; f < MAX_FAM_NUMBER; f++){
         if(pop->fam[f].population > 0){
@@ -73,21 +76,85 @@ void life_cycle(population* pop){
                     for(int nb = 0; nb < n_newborn; nb++){
                         int i = birth_top(pop);
                         if(i >= 0){
-                            init_new_born(pop, i, nf);
+                            init_newborn(pop, i, nf);
                             pop->fam[nf].population += 1;
                         } else {
                             // no more space for a newborn
+                            warning("No more space for a newborn.");
                         }
                     }
                 } else {
-                    // no more space for a new family
+                    warning("No more space for a new family.");
                 }
             }
         }
     }
-    // Select two families
-    // create a new one with crossed features
-    // 
-    // Adding a mecanism to prevent buffer overflow but tracking
-    // the tendency to over populate
+}
+
+
+void time_step(population* pop, int date){
+    cell_map cells;
+    int ret = make_cell_map(pop, &cells);
+    if(ret == -1){
+        warning("Not enought space in cell_map !");
+    }
+    for(short i = 0; i < MAX_POP; i++){
+        if(pop->indiv[i].vitality > 0){
+            short f = pop->indiv[i].family;
+            short neigbors[MAX_POP];
+            short cell = pos_to_cell(pop->indiv[i].pos);
+            get_cell(&cells, neigbors, cell);
+            int c = 0;
+            int nearest_other = -1;
+            float min_d_other = 2;  // distances are between 0 and 1
+
+            // for each neighbors
+            while(neigbors[c] >= 0){
+                short ip = neigbors[c];
+                short fp = pop->indiv[neigbors[c]].family;
+                float d = norm(sub(pop->indiv[i].pos, pop->indiv[ip].pos));
+                if(pop->fam[f].species == pop->fam[fp].species){
+                    // sum attractivity of fellow individual
+                    float attr = pop->fam[f].sociability / (d * d);
+                    point diff = sub(pop->indiv[ip].pos, pop->indiv[i].pos);
+                    pop->indiv[i].speed = add(
+                            pop->indiv[i].speed,
+                            mul(diff, attr/norm(diff)/COEF_D2)
+                    );
+                } else {
+                    if(d < min_d_other){
+                        min_d_other = d;
+                        nearest_other = ip;
+                    }
+                }
+                c++;
+            }
+
+            // cap speed to 2
+            float n = norm(pop->indiv[i].speed);
+            if(n > 2){
+                pop->indiv[i].speed = mul(pop->indiv[i].speed, 2.0/n);
+            }
+            
+            if(min_d_other*min_d_other*COEF_D2 < pop->fam[f].aggresiveness){
+                // assault
+                float damage = 0.3 * RAND();
+                pop->fam[f].ressources += damage;
+                pop->indiv[nearest_other].vitality -= damage;
+            }
+
+            // move
+            move(pop, i);
+
+        }
+    }
+
+    // Kill individuals that got negative vitality
+    for(int i = 0; i < MAX_POP; i++){
+        if(pop->indiv[i].vitality != -1 && pop->indiv[i].vitality <= 0){
+            kill_indiv(pop, i);
+            pop->indiv[i].vitality = 0;
+        }
+    }
+
 }

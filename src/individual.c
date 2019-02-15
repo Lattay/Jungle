@@ -6,10 +6,10 @@ void init_pop(population* pop){
     for(int f = 0; f < INIT_FAM_NUMBER; f++){
         for(int h = 0; h < INIT_FAM_SIZE; h++){
             i = INIT_FAM_SIZE * f + h;
-            pop->indiv[i].direction = RAND();
-            pop->indiv[i].speed = RAND();
-            pop->indiv[i].x = RAND();
-            pop->indiv[i].y = RAND();
+            pop->indiv[i].speed.x = RAND();
+            pop->indiv[i].speed.y = RAND();
+            pop->indiv[i].pos.x = RAND();
+            pop->indiv[i].pos.y = RAND();
             pop->indiv[i].vitality = pop->fam[f].vitality 
                                      * map1(RAND(), 0.5, 1.0);
 
@@ -21,6 +21,8 @@ void init_pop(population* pop){
         pop->fam[f].population = 0;
     }
     // Fill stacks
+    pop->atop = INIT_POP - 1;
+    pop->dtop = MAX_POP - INIT_POP - 1;
     for(int k = 0; k < MAX_POP; k++){
         if(k < INIT_POP){
             pop->alive[k] = k;
@@ -36,11 +38,11 @@ void init_pop(population* pop){
 }
 
 void init_newborn(population* pop, int i, int f){
-    pop->indiv[i].direction = RAND();
-    pop->indiv[i].speed = RAND();
+    pop->indiv[i].speed.x = RAND();
+    pop->indiv[i].speed.y = RAND();
     pop->indiv[i].vitality = pop->fam[f].vitality * map1(RAND(), 0.5, 1.0);
-    pop->indiv[i].x = RAND();
-    pop->indiv[i].y = RAND();
+    pop->indiv[i].pos.x = RAND();
+    pop->indiv[i].pos.y = RAND();
     pop->indiv[i].family = f;
 }
 
