@@ -4,7 +4,7 @@
 
 
 short pos_to_cell(point pos){
-    return (int) CELL_NB * (CELL_NB * pos.x + pos.y);
+    return (int) (CELL_NB - 1) * (((int) CELL_NB * pos.x) + pos.y);
 }
 
 void init_cell_map(cell_map* map, int max_pop){
@@ -17,7 +17,6 @@ void init_cell_map(cell_map* map, int max_pop){
 }
 
 void free_cell_map(cell_map* map){
-    free(map->stacks);
     free(map->cell_content);
 }
 
