@@ -4,7 +4,7 @@
 #include "tools.h"
 #include "field.h"
 
-void life_cycle(population* pop);
-void time_step(population* pop, int date);
+void life_cycle(population* pop, config* conf);
+void time_step(population* pop, config* conf, int date);
 
 #endif

@@ -1,13 +1,28 @@
 CC=gcc
-CFLAGS=-g -Wall -pedantic -std=c99
+CFLAGS=-g -Wall -Wextra -pedantic -std=c99
 LFLAGS=-lm
 
-jungle.x86_64: build/family.o build/field.o build/individual.o \
-	build/main.o build/simulation.o build/simulation.o build/tools.o
+all: jungle.x86_64
+
+test: test.x86_64
+	./test.x86_64
+
+jungle.x86_64: build/main.o build/tools.o build/population.o build/field.o \
+	           build/simulation.o
 	${CC} ${LFLAGS} $^ -o $@
 
-build/%.o: src/%.c
-	$(CC) -c $(CFLAGS) $^ -o $@
+test.x86_64: build/test.o build/tools.o build/population.o build/field.o \
+	         build/simulation.o
+	${CC} ${LFLAGS} $^ -o $@
+
+build/test.o: test/test.c test/ext/unity.c
+	${CC} ${CFLAGS} -c $^ -o $@
+
+build/main.o: src/main.c src/config.h
+	${CC} ${CFLAGS} -c $< -o $@
+
+build/%.o: src/%.c src/%.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	rm build/*

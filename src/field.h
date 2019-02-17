@@ -1,29 +1,36 @@
 #ifndef FIELD_H
 #define FIELD_H
+#include <stdbool.h>
 #include "tools.h"
 #include "population.h"
 
 short pos_to_cell(point pos);
 
-#define CELL_NB 16
-#define COEF_D2 1000
-#define DT 0.0005
-
 typedef struct {
     short indiv;
     short next;
-} cell;
+} cell_indiv;
+
+typedef struct {
+    short bottom;
+    short top;
+} cell_stack;
 
 typedef struct {
     int first_free;
-    cell cells[MAX_POP]; 
+    cell_stack stacks[CELL_NB];
+    cell_indiv* cell_content;
 } cell_map;
 
 short pos_to_cell(point pos);
-void get_cell(cell_map* cells, short* outarr, short cell);
-int set_cell(cell_map* cells, short cell, short indiv);
-int make_cell_map(population* pop, cell_map* cells);
 
-void move(population* pop, short i);
+void init_cell_map(cell_map* map, int max_pop);
+void free_cell_map(cell_map* map);
+
+bool add_to_cell(cell_map* map, short cell, short indiv, int max_pop);
+void get_cell_content(cell_map* map, short* outarr, short cell);
+bool fill_cell_map(population* pop, cell_map* map, int max_pop);
+
+void move(individual* indiv, float dt);
 
 #endif
