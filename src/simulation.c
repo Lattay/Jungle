@@ -48,18 +48,21 @@ void life_cycle(population* pop, config* conf){
             dead_fam[dead_fam_p++] = f;
         }
     }
+    printf("Families: %d\n", conf->max_fam - dead_fam_p);
     
     for(int f = 0; f < conf->max_fam; f++){
         if(pop->fam[f].population > 0){
-            if(RAND() > REPRODUCTION_CONSTANT){
+            if(RAND() < REPRODUCTION_CONSTANT){
                 if(dead_fam_p > 0){
                     int nf = dead_fam[--dead_fam_p];
                     int s = pop->fam[f].species;
                     int fp = f;
                     int n = spec_fam[conf->max_fam*s];
                     // select a random family of the same species
-                    while(fp == f){
-                        fp = spec_fam[(int)RAND()*n + conf->max_fam*s];
+                    if(n > 1){
+                        while(fp == f){
+                            fp = spec_fam[(int)RAND()*(n + 1) + conf->max_fam*s];
+                        }
                     }
                     // use features of families f and fp to create a new
                     // nf family
@@ -70,7 +73,7 @@ void life_cycle(population* pop, config* conf){
                     float fr = pop->fam[f].fertility;
                     int popf = pop->fam[f].population;
                     int ressf = pop->fam[f].ressources;
-                    int n_newborn = fr * popf * ( 1 - tot * popf
+                    int n_newborn = BIRTH_CONSTANT * fr * popf * ( 1 - tot * popf
                             / (conf->ressources * popf + tot * ressf));
                     // init the newborns
                     for(int nb = 0; nb < n_newborn; nb++){
@@ -100,7 +103,7 @@ void time_step(population* pop, config* conf, int date){
         warning("Not enought space in cell_map !");
     }
     short* neigbors = malloc(conf->max_pop*sizeof(short));
-    for(short a = 0; a < pop->atop; a++){
+    for(short a = 0; a <= pop->atop; a++){
         short i = pop->alive[a];
         short f = pop->indiv[i].family;
         short cell = pos_to_cell(pop->indiv[i].pos);
@@ -139,7 +142,7 @@ void time_step(population* pop, config* conf, int date){
         
         if(min_d_other*min_d_other*conf->coef_d2 < pop->fam[f].aggresiveness){
             // assault
-            float damage = 0.3 * RAND();
+            float damage = DAMAGE_CONSTANT * RAND();
             pop->fam[f].ressources += damage;
             pop->indiv[nearest_other].vitality -= damage;
         }
@@ -151,7 +154,7 @@ void time_step(population* pop, config* conf, int date){
     free_cell_map(&map);
 
     // Kill individuals that got negative vitality
-    for(short a = 0; a < pop->atop; a++){
+    for(short a = 0; a <= pop->atop; a++){
         short i = pop->alive[a];
         if(pop->indiv[i].vitality <= 0){
             kill_alive(pop, a);
