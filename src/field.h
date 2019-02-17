@@ -18,7 +18,7 @@ typedef struct {
 
 typedef struct {
     int first_free;
-    cell_stack stacks[CELL_NB];
+    cell_stack stacks[CELL_NB*CELL_NB];
     cell_indiv* cell_content;
 } cell_map;
 

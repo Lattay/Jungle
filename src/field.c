@@ -10,7 +10,7 @@ short pos_to_cell(point pos){
 void init_cell_map(cell_map* map, int max_pop){
     map->cell_content = malloc(max_pop * sizeof(cell_indiv));
     map->first_free = 0;
-    for(int s = 0; s < CELL_NB; s++){
+    for(int s = 0; s < CELL_NB*CELL_NB; s++){
         map->stacks[s].bottom = -1;
         map->stacks[s].top = -1;
     }
