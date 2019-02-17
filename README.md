@@ -46,3 +46,8 @@ New borns features are obtained by crossing two families of the same species whi
 
 The field provide a constant amount of ressources which means that if the population grow too fast
 it will be restrained by the lack of ressources.
+
+# Unit testing
+
+The code will ship with a suite of unit tests to check its validy. The test suite
+is based on the [Unity framework](https://github.com/ThrowTheSwitch/Unity).
