@@ -87,7 +87,6 @@ void init_pop(population* pop, config* conf){
             pop->indiv[i].pos.y = RAND();
             pop->indiv[i].vitality = pop->fam[f].vitality 
                                      * map1(RAND(), 0.5, 1.0);
-
             pop->indiv[i].family = f;
         }
         pop->fam[f].population = conf->init_fam_size;
@@ -126,11 +125,11 @@ void tidy_alive_stack(population* pop, int max_pop){
     int first_free = 0;
     int last_occupied = max_pop;
     while(first_free < last_occupied){
-        while(pop->alive[first_free] >= 0 && first_free < last_occupied){
-            first_free++;
-        }
         while(pop->alive[last_occupied] < 0 && last_occupied > first_free){
             last_occupied--;
+        }
+        while(pop->alive[first_free] >= 0 && first_free < last_occupied){
+            first_free++;
         }
         if(last_occupied != first_free){
             pop->alive[first_free] = pop->alive[last_occupied];
