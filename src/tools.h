@@ -4,6 +4,8 @@
 #include <math.h>
 
 #define RAND() (((float) rand())/RAND_MAX)
+#define PI 3.141592653589793
+#define HALF_PI 1.570796326794897
 
 float map(float x, float bin, float tin, float bout, float tout);
 float map1(float x, float bout, float tout);
