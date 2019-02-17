@@ -30,8 +30,9 @@ int main(int argc, char** argv){
     init_pop(&pop, &conf);
     int gen = 0;
     while(pop.atop > 1){
+        printf("Gen %d\n", gen);
         for(int step = 0; step < 10; step++){
-            printf("Gen %d, step %d, pop %d\n", gen, step, pop.atop);
+            printf("      step %d, pop %d\n", step+1, pop.atop);
             time_step(&pop, &conf, step);
         }
 
