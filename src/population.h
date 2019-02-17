@@ -7,11 +7,6 @@
 #include "config.h"
 #include "tools.h"
 
-#define REPRODUCTION_CONSTANT 0.5
-#define BIRTH_CONSTANT 1
-#define DEATH_CONSTANT 2
-#define AGING 0
-
 typedef struct {
     short species;
     // features
