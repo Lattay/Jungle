@@ -16,17 +16,17 @@ void warning(char* msg);
 
 // Basic geometry
 typedef struct {
-    float x;
-    float y;
+  float x;
+  float y;
 } point;
 
-point add(point p1, point p2);
-point sub(point p1, point p2);
-point mul(point p, float t);
-point rotate(point p1, float angle);
-float dot(point p1, point p2);
-float det(point p1, point p2);
-float norm(point p);
-float angle(point p1, point p2);
+point add(const point p1, const point p2);
+point sub(const point p1, const point p2);
+point mul(const point p, float t);
+point rotate(const point p1, float angle);
+float dot(const point p1, const point p2);
+float det(const point p1, const point p2);
+float norm(const point p);
+float angle(const point p1, const point p2);
 
 #endif

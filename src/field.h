@@ -4,25 +4,24 @@
 #include "tools.h"
 #include "population.h"
 
-short pos_to_cell(point pos);
 
 typedef struct {
-    short indiv;
-    short next;
+  short indiv;
+  short next;
 } cell_indiv;
 
 typedef struct {
-    short bottom;
-    short top;
+  short bottom;
+  short top;
 } cell_stack;
 
 typedef struct {
-    int first_free;
-    cell_stack stacks[CELL_NB*CELL_NB];
-    cell_indiv* cell_content;
+  int first_free;
+  cell_stack stacks[CELL_NB*CELL_NB];
+  cell_indiv* cell_content;
 } cell_map;
 
-short pos_to_cell(point pos);
+short pos_to_cell(const point pos);
 
 void init_cell_map(cell_map* map, int max_pop);
 void free_cell_map(cell_map* map);
