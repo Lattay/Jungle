@@ -26,7 +26,6 @@ short pos_to_cell(const point pos);
 void init_cell_map(cell_map* map, int max_pop);
 void free_cell_map(cell_map* map);
 
-bool add_to_cell(cell_map* map, short cell, short indiv, int max_pop);
 void get_cell_content(cell_map* map, short* outarr, short cell);
 bool fill_cell_map(population* pop, cell_map* map, int max_pop);
 

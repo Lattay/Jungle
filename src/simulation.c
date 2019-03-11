@@ -92,6 +92,7 @@ void life_cycle(population* pop, config* conf){
       }
     }
   }
+  free(spec_fam);
 }
 
 
@@ -117,14 +118,14 @@ void time_step(population* pop, config* conf, int date){
       short ip = neigbors[c];
       if(ip != i){
         short fp = pop->indiv[neigbors[c]].family;
-        float d = norm(sub(pop->indiv[i].pos, pop->indiv[ip].pos));
+        point diff = sub(pop->indiv[ip].pos, pop->indiv[i].pos);
+        float d = norm(diff);
         if(pop->fam[f].species == pop->fam[fp].species){
           // sum attractivity of fellow individual
           float attr = pop->fam[f].sociability / (d * d);
-          point diff = sub(pop->indiv[ip].pos, pop->indiv[i].pos);
           pop->indiv[i].speed = add(
             pop->indiv[i].speed,
-            mul(diff, attr/norm(diff)/conf->coef_d2)
+            mul(diff, conf->dt*attr/d/conf->coef_d2)
           );
         } else {
           if(d < min_d_other){
@@ -138,8 +139,8 @@ void time_step(population* pop, config* conf, int date){
 
     // cap speed to 2
     float n = norm(pop->indiv[i].speed);
-    if(n > 2){
-      pop->indiv[i].speed = mul(pop->indiv[i].speed, 2.0/n);
+    if(n > 1.0){
+      pop->indiv[i].speed = mul(pop->indiv[i].speed, 1.0/n);
     }
 
     if(min_d_other*min_d_other*conf->coef_d2 < pop->fam[f].aggresiveness){

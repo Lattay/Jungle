@@ -20,7 +20,7 @@ void free_cell_map(cell_map* map){
   free(map->cell_content);
 }
 
-bool add_to_cell(cell_map* map, short cell, short indiv, int max_pop){
+static bool add_to_cell(cell_map* map, short cell, short indiv, int max_pop){
   int newcell = map->first_free;
   if(newcell >= 0){
     if(map->stacks[cell].bottom == -1){

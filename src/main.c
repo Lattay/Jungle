@@ -22,15 +22,15 @@ int main(int argc, char** argv){
   // Default config
   conf.spec_from_file = false;
   conf.coef_d2 = 0.00001;
-  conf.dt = 0.01;
+  conf.dt = 0.005;
   conf.max_spec = 10;
   conf.nspec = 10;
-  conf.max_fam = 200;
+  conf.max_fam = 300;
   conf.max_pop = 2000;
   conf.init_fam = 100;
   conf.init_fam_size = 10;
   conf.init_pop = 1000;
-  conf.ressources = 1000;
+  conf.ressources = 10000;
 
   population pop;
   alloc_pop(&pop, &conf);

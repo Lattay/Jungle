@@ -4,11 +4,14 @@ LFLAGS=-lm
 
 all: jungle.x86_64
 
+run: jungle.x86_64
+	./jungle.x86_64 out.bin
+
 test: test.x86_64
 	./test.x86_64
 
 jungle.x86_64: build/main.o build/tools.o build/population.o build/field.o \
-	           build/simulation.o
+	           build/simulation.o build/output.o
 	${CC} ${LFLAGS} $^ -o $@
 
 test.x86_64: build/test.o build/unity.o build/tools.o build/population.o \

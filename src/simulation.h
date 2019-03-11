@@ -4,8 +4,8 @@
 #include "tools.h"
 #include "field.h"
 
-#define REPRODUCTION_CONSTANT 0.5
-#define BIRTH_CONSTANT 2
+#define REPRODUCTION_CONSTANT 0.2
+#define BIRTH_CONSTANT 5
 #define DEATH_CONSTANT 2
 #define AGING 0
 #define DAMAGE_CONSTANT 0.1
