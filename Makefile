@@ -18,17 +18,21 @@ test.x86_64: build/test.o build/unity.o build/tools.o build/population.o \
 	         build/field.o build/simulation.o
 	${CC} ${LFLAGS} $^ -o $@
 
-build/test.o: test/test.c
+build/test.o: test/test.c build
 	${CC} ${CFLAGS} -c $< -o $@
 
-build/unity.o: test/ext/unity.c
+build/unity.o: test/ext/unity.c build
 	${CC} ${CFLAGS} -c $< -o $@
 
-build/main.o: src/main.c src/config.h
+build/main.o: src/main.c src/config.h build
 	${CC} ${CFLAGS} -c $< -o $@
 
-build/%.o: src/%.c src/%.h
+build/%.o: src/%.c src/%.h build
 	$(CC) $(CFLAGS) -c $< -o $@
+
+build:
+	mkdir build
 
 clean:
 	rm build/*
+	rmdir build
