@@ -7,6 +7,7 @@
 
 int main(int argc, char** argv){
 
+
   printf("%f\n", RAND());
   FILE* fout = NULL;
   if(argc > 1){
@@ -31,6 +32,10 @@ int main(int argc, char** argv){
   conf.init_fam_size = 10;
   conf.init_pop = 1000;
   conf.ressources = 10000;
+  conf.const_seed = 92837;
+  conf.time_seed = false;
+
+  srand(conf.time_seed ? time(NULL) : conf.const_seed);
 
   population pop;
   alloc_pop(&pop, &conf);

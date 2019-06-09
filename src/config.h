@@ -1,12 +1,15 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 #include <stdbool.h>
+#include <time.h>
 
 #define CELL_NB 16
 
 typedef struct {
   // 
   bool spec_from_file;
+  bool time_seed;
+  int const_seed;
   // space time params
   float coef_d2;
   float dt;
